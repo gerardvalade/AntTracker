@@ -17,10 +17,8 @@ void moveMotors(uint16_t az, uint16_t el)
       #endif            
     }
   #endif 
-
   bool az_reversed = false;
   bool el_reversed = false;   
-  
   // Reverse servo action if necessary
   #if defined AZ_SERVO_360   
     #if defined REVERSEAZIMUTH    
@@ -42,6 +40,13 @@ void moveMotors(uint16_t az, uint16_t el)
     #endif     
   #endif
 
+  /* here we constrain motor movement between min and max degrees */
+  //az = constrain(az, minAz, maxAz);
+  az = (az < minAz) ? minAz : az;
+  az = (az > maxAz) ? maxAz : az;
+  el = (el < minEl) ? minEl : el;
+  el = (el > maxEl) ? maxEl : el;
+
   // here we move the servos and hence the antenna
   // note: myservo.attach(pin, 1000, 2000)
 
@@ -51,12 +56,25 @@ void moveMotors(uint16_t az, uint16_t el)
     log.printf("Servo write az=%u  el=%u\n", az, el);
   #endif
   #if defined SERVOS
-    azServo.write(az);       // async non-blocking for ESP
-    elServo.write(el);  
+    #if defined _MOBASERVO
+      azServo.setSpeed(SERVO_SPEED);
+      elServo.setSpeed(SERVO_SPEED);   
+      azServo.write(az);       // async non-blocking for MobaTools
+      elServo.write(el);  
+    #else
+      azServo.write(az);       
+      elServo.write(el);  
+    #endif
   #endif
-  #if defined STEPPERS
+  #if defined _MOBASTEP 
     azStepper.write(az, 1);  // async non-blocking
     elStepper.write(el, 1);  // async non-blocking
+  #endif
+  #if defined _ACCELSTEP 
+    acst_az_step = az * acst_steps_per_deg;
+    acst_el_step = el * acst_steps_per_deg;
+    azStepper.moveTo(acst_az_step);  // async non-blocking
+    elStepper.moveTo(acst_el_step);  // async non-blocking
   #endif
 }
 //=======================================================
@@ -93,14 +111,12 @@ void pointMotors(int16_t worldAz, int16_t ourEl, int16_t boxHdg)
 //=====================================================
 void waitForComplete()
 {   
-  #if (defined ESP32) || (defined ESP8266)
-    #if defined SERVOS
-      while ((azServo.moving()) || (elServo.moving())) {delay(100);};
-    #endif
-    #if defined STEPPERS
-      while ((azStepper.moving()) || (elStepper.moving())) {delay(100);};
-    #endif
+  #if (defined _MOBASTEP)
+      while ((azStepper.distanceToGo() != 0) || (elStepper.distanceToGo() != 0)) {delay(100);}; 
   #endif  
+  #if (defined _MOBASERVO)
+      while ((azServo.moving()) || (elServo.moving())) {delay(100);}; 
+  #endif    
 }
 //=====================================================
 void testMotors() {

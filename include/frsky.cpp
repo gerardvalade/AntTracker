@@ -990,7 +990,7 @@
     #if (defined bleBuiltin) &&  (MEDIUM_IN == 4)          // BLE4
       void Frs_Receive_BLE(uint8_t proto) // proto S.Port only for now
       {  
-        if(newMsg)
+        if(ble_received)
         {
           /* Test data
             length = 23;  // includes stuffed byte
@@ -1037,7 +1037,7 @@
           {
             msg_offset = len;
             msg_chunk = 1;
-            newMsg = false;
+            ble_received = false;
           }
           //memcpy(&inBuf, &ppData[msg_offset], len);
           memcpy(&inBuf, &msgBuf[msg_offset], len);

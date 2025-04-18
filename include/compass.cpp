@@ -15,7 +15,13 @@
      #include <QMC5883LCompass.h>
      QMC5883LCompass compass;
    #endif
-
+  //=========================================================================   
+   #if  defined HMC5883L
+   bool magTimeout() {
+     sensors_event_t event;  
+     return (!(mag.getEvent(&event)));
+   }
+ #endif
   //=========================================================================
   bool initialiseCompass() 
   {
@@ -81,10 +87,5 @@
         return fHeading;      
   }
   //====================================================
-  #if  defined HMC5883L
-    bool magTimeout() {
-      sensors_event_t event;  
-      return (!(mag.getEvent(&event)));
-    }
-  #endif
+
 #endif  // end of whole Compass module  

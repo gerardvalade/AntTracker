@@ -10,7 +10,7 @@
 
 #define MAJOR_VER          0
 #define MINOR_VER          0
-#define PATCH_LEV          8 
+#define PATCH_LEV          9 
 
 //#define TELEMETRY_SOURCE  1  // BetaFlight/CF
 #define TELEMETRY_SOURCE  2  // EdgeTX/OpenTX
@@ -28,6 +28,7 @@
   v0.0.6 2024-06-26 Add UART, UDP, BT telemetry example
                     Divide Battery Volts and Amps by 10
   V0.0.7 2024-07-09 Divide by V & A by a further 10
+  v0.0.9 2025-01-30 Add support for BLE4.2
 */
 
 //=========  D E M O / D E B U G   M A C R O S  ========

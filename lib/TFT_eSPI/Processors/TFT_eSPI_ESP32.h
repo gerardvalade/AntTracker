@@ -12,8 +12,6 @@
 #include "soc/spi_reg.h"
 #include "driver/spi_master.h"
 #include "hal/gpio_ll.h"
-#include "driver/gpio.h"  // added by zs6buj
-#include <rom/ets_sys.h>  // added by zs6buj
 
 #if !defined(CONFIG_IDF_TARGET_ESP32C3) && !defined(CONFIG_IDF_TARGET_ESP32S2) && !defined(CONFIG_IDF_TARGET_ESP32)
   #define CONFIG_IDF_TARGET_ESP32

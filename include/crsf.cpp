@@ -15,8 +15,14 @@
     if (len) 
     {
   #endif
+  #if (MEDIUM_IN  == 4) // BLE4.2 selected
+    if (ble_received)  // flag from callback
+    {
+      ble_received = false;
+      int16_t len = ble_len;
+  #endif
   #if (MEDIUM_IN  == 5) // ESPNOW selected
-    if (espnow_received)  // flag
+    if (espnow_received)  // flag from callback
     {
       espnow_received = false;
       int16_t len = espnow_len;
